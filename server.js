@@ -22,7 +22,8 @@ showTableHandler = function(tableName) {
 
 
 app.get('/showTable/:tableName', function(request, response) {
-    response.json(showTableHandler(request.params.tableName));
+    var tableName = request.params.tableName
+    response.json(showTableHandler(tableName));
 });
 
 app.listen(3000);
