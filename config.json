@@ -1,0 +1,9 @@
+{
+	"mysql":{
+		"database": "test",
+		"username": "node_server",
+		"password": "cs631",
+		"host": "cs631fp-mysql.hopto.org",
+		"port": null
+	}
+}
