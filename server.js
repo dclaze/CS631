@@ -1,17 +1,28 @@
 var sqlConnector = require('./mysql_connector_sequelize').init(),
-	express = require('express'),
-	app = express();
+    express = require('express'),
+    app = express(),
+    promises = require('q');
 
-sqlConnector.query("SELECT * FROM testtable1").success(function(myTableRows) {
-    console.log(myTableRows);
-});
+app.use(require('express-promise')());
 
-app.get('/hello.txt', function(req, res){
-  var body = 'Hello World';
-  res.setHeader('Content-Type', 'text/plain');
-  res.setHeader('Content-Length', body.length);
-  res.end(body);
+showTableHandler = function(tableName) {
+    var deferred = promises.defer();
+
+    sqlConnector.query("SELECT * FROM " + tableName)
+        .success(function(myTableRows) {
+            console.log(myTableRows);
+            deferred.resolve(myTableRows);
+        })
+        .failure(function(error) {
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
+}
+
+
+app.get('/showTable/:tableName', function(request, response) {
+    response.json(showTableHandler(request.params.tableName));
 });
 
 app.listen(3000);
-console.log('Listening on port 3000');
