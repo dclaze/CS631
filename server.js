@@ -3,7 +3,9 @@ var sqlConnector = require('./mysql_connector_sequelize').init(),
     app = express(),
     promises = require('q');
 
-app.use(require('express-promise')());
+app.use(require('express-promise')())
+.use(express.static(__dirname));
+
 
 showTableHandler = function(tableName) {
     var deferred = promises.defer();
