@@ -3,7 +3,8 @@ var sqlConnector = require('./mysql_connector_sequelize').init(),
     app = express(),
     promises = require('q');
 
-app.use(require('express-promise')());
+app.use(require('express-promise')())
+    .use(express.static(__dirname));
 
 showTableHandler = function(tableName) {
     var deferred = promises.defer();
@@ -21,8 +22,11 @@ showTableHandler = function(tableName) {
 }
 
 
-app.get('/showTable/:tableName', function(request, response) {
-    var tableName = request.params.tableName
+app.get('/showTable', function(request, response) {
+    var tableName = request.query.tableName;
+    if (!tableName)
+        response.status(400).send('Bad Request');
+
     response.json(showTableHandler(tableName));
 });
 
