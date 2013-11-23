@@ -1,18 +1,18 @@
-var sampleApp = angular.module('sampleApp', ['ngGrid']);
+var sampleApp = angular.module('sampleApp', ['ngGrid', '$strap.directives']);
 
 sampleApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider
             .when('/home', {
-                templateUrl: 'templates/home.html',
+                templateUrl: 'views/home.html',
                 controller: 'HomeController'
             })
             .when('/projectManagement', {
-                templateUrl: 'templates/projectManagement.html',
-                controller: 'ProjectManagement'
+                templateUrl: 'views/projectManagement/projectManagement.html',
+                controller: 'ProjectManangementController'
             })
             .when('/humanResources', {
-                templateUrl: 'templates/humanResouces.html',
+                templateUrl: 'views/humanResources/humanResources.html',
                 controller: 'HumanResourcesController'
             })
             .otherwise({
@@ -25,10 +25,6 @@ sampleApp.controller('HomeController', function($scope) {
     $scope.message = 'This is the home screen';
 });
 
-sampleApp.controller('ProjectManagement', function($scope) {
-    $scope.message = 'This is project management screen';
-
-});
 
 sampleApp.controller('HumanResourcesController', function($scope) {
     $scope.message = 'This is human resouces screen';
