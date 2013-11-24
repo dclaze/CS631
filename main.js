@@ -1,4 +1,4 @@
-var sampleApp = angular.module('sampleApp', ['ngGrid', '$strap.directives']);
+var sampleApp = angular.module('sampleApp', ['ngGrid', '$strap.directives', 'fundoo.services']);
 
 sampleApp.config(['$routeProvider',
     function($routeProvider) {

@@ -5,7 +5,6 @@ angular.module('sampleApp')
 
             $scope.onCreateProjectClick = function($event, data) {
                 $event.preventDefault();
-                debugger;
                 var m = $modal({
                     templateUrl: 'createProject.html',
                     backdrop: true,

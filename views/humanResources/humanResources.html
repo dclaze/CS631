@@ -1,10 +1,13 @@
 <h2>Human Resources</h2>
-	{{message}}
+{{message}}
 
-<h3> Employee Info</h3>
+<h3>Employee Info</h3>
 <div ng-controller="EmployeeGridController">
-	<strong>Search:</strong>
-	<input type="text" ng-model="filterOptions.filterText"/>
+    <strong>Search:</strong>
+    <span>
+        <input type="text" ng-model="filterOptions.filterText" />
+        <button class="btn btn-primary" ng-click="onCreateEmployeeClick($event)">Create Technician</button>
+    </span>
     <div class="gridStyle" ng-grid="gridOptions">
     </div>
 </div>
