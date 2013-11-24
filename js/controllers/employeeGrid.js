@@ -1,14 +1,25 @@
 angular.module('sampleApp')
-    .controller('EmployeeGridController', function($scope, $http, createDialog) {
-        $scope.onCreateEmployeeClick = function($event, data) {
-            createDialog('views/humanResources/createEmployee.html', {
-                id: 'createEmployee',
-                title: 'Create Employee',
+    .controller('EmployeeGridController', function($scope, $http, $modal) {
+        $scope.employee = {};
+
+        $scope.onCreateEmployeeClick = function() {
+            $modal.open({
+                templateUrl: 'views/humanResources/createEmployee.html',
                 backdrop: true,
-                success: {
-                    label: 'Create',
-                    fn: function() {
-                        console.log('Simple modal closed');
+                windowClass: 'modal',
+                controller: function($scope, $modalInstance, employee) {
+                    $scope.employee = employee;
+                    $scope.submit = function() {
+                        alert("Submitting Employee" + JSON.stringify($scope.employee));
+                        $modalInstance.dismiss('cancel');
+                    }
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    };
+                },
+                resolve: {
+                    employee: function() {
+                        return $scope.employee;
                     }
                 }
             });
@@ -17,6 +28,7 @@ angular.module('sampleApp')
         $scope.filterOptions = {
             filterText: ''
         };
+
         $http({
             method: 'GET',
             url: '/showTable/',
