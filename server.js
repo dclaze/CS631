@@ -1,33 +1,38 @@
-var sqlConnector = require('./mysql_connector_sequelize').init(),
+var config = require('./config').init('config.json'),
+    sqlConnector = require('./server/mysql_connector_sequelize').init(config.mysql),
     express = require('express'),
     app = express(),
-    promises = require('q');
+    db = require('./server/models/define')(sqlConnector);
+
 
 app.use(require('express-promise')())
     .use(express.static(__dirname));
+app.use(express.bodyParser());
 
-showTableHandler = function(tableName) {
-    var deferred = promises.defer();
+require('./server/routes.js')(app, db);
+console.log(db.models);
+app.set('models', db.models);
+app.set('port', 54321);
 
-    sqlConnector.query("SELECT * FROM " + tableName)
-        .success(function(myTableRows) {
-            console.log(myTableRows);
-            deferred.resolve(myTableRows);
-        })
-        .failure(function(error) {
-            deferred.reject(error);
-        });
+console.log("TEST");
+app.listen(app.get('port'));
+console.log("Started app on port", app.get('port'));
 
-    return deferred.promise;
-}
-
-
-app.get('/showTable', function(request, response) {
-    var tableName = request.query.tableName;
-    if (!tableName)
-        response.status(400).send('Bad Request');
-
-    response.json(showTableHandler(tableName));
+console.log(process);
+process.on('uncaughtException', function(err) {
+    console.log('Caught exception: ' + err);
 });
+// db.sequelize.sync().complete(function(err) {
+//     if (err) {
+//         throw err
+//     } else {
+//         console.log("TEST");
+//         app.listen(app.get('port'));
+//         console.log("Started app on port", app.get('port'));
 
-app.listen(3000);
+//         console.log(process);
+//         process.on('uncaughtException', function(err) {
+//             console.log('Caught exception: ' + err);
+//         });
+//     }
+// });

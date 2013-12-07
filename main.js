@@ -4,15 +4,15 @@ sampleApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider
             .when('/home', {
-                templateUrl: 'views/home.html',
+                templateUrl: 'source/home.html',
                 controller: 'HomeController'
             })
             .when('/projectManagement', {
-                templateUrl: 'views/projectManagement/projectManagement.html',
+                templateUrl: 'source/projectManagement/views/projectManagement.html',
                 controller: 'ProjectManangementController'
             })
             .when('/humanResources', {
-                templateUrl: 'views/humanResources/humanResources.html',
+                templateUrl: 'source/humanResources/views/humanResources.html',
                 controller: 'HumanResourcesController'
             })
             .otherwise({

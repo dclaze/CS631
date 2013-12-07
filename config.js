@@ -1,9 +1,9 @@
-var filesystem = require('fs');
-var configFileName = 'config.json';
+var filesystem = require('fs'),
+	defaultFileName = 'config.json';
 
 config = {
-    init: function() {
-        var configFile;
+    init: function(configFileName) {
+        configFileName = configFileName || defaultFileName;
         try {
             var configFile = filesystem.readFileSync(configFileName);
         } catch (e) {
@@ -12,7 +12,5 @@ config = {
         return configFile ? JSON.parse(configFile.toString()) : {};
     }
 };
-
-console.log(config.init().mysql.database);
 
 module.exports = config;

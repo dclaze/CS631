@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <h3>Create Employee</h3>
+</div>
+<form class="form-horizontal" role="form" ng-submit="submit()">
+    <div class="form-group">
+        <label for="employeeName" class="col-sm-2 control-label">Name:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="employeeName" placeholder="Name" ng-model="employee.name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="employeeTitle" class="col-sm-2 control-label">Title:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="employeeTitle" placeholder="Title" ng-model="employee.title">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="employeePhone" class="col-sm-2 control-label">Phone Number:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="employeePhone" placeholder="Phone Number" ng-model="employee.phoneNumber">
+        </div>
+    </div>
+    <!-- <div>TODO PROJECT</div>
+    <div>TODO BUILDING NAME</div>
+    <div>TODO OFFICE NUMBER</div> -->
+    <div id='employee-status-group'>
+        <div class="btn-group" bs-buttons-radio ng-model="selection">
+            <button type="button" class="btn" value="fullTime">Full Time</button>
+            <button type="button" class="btn" value="partTime">Part Time</button>
+        </div>
+        <div class="animate-switch-container" ng-switch on="selection">
+            <div class="animate-switch" ng-switch-when="fullTime">
+                <div class="form-group">
+                    <label for="salary">Salary</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="number" class="form-control" id="salary" placeholder="Salary" ng-model="fullTime.salary">
+                        <span class="input-group-addon">.00</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" type="text" class="form-control" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="Start Date" ng-model="fullTime.startDate">
+                </div>
+            </div>
+            <div class="animate-switch" ng-switch-when="partTime">
+                <div class="form-group">
+                    <label for="hourlyRate">Hourly Rate</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="number" class="form-control" id="hourlyRate" placeholder="Hourly Rate" ng-model="partTime.hourlyRate">
+                        <span class="input-group-addon">.00</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration in Days</label>
+                    <input id="duration" type="number" class="form-control" placeholder="Duration in Days" ng-model="partTime.duration">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>{{employeeCreatedError}}</div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <input type="submit" class="btn primary-btn" value="Create" />
+    </div>
+</form>
