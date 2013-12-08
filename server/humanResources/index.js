@@ -1,12 +1,74 @@
 var Sequelize = require('sequelize'),
     promises = require('q');
 
-// var getEmployees = function() {
+var createEmployeeMapping = function(createEmployeeDTO) {
+    var employee = createEmployeeDTO.employee
+    return {
+        ename: employee.name,
+        title: employee.title,
+        phone: employee.phoneNumber,
+        dept: 'Test Dept'
+    };
+};
+
+var fullTimeEmployeeMapping = function(createEmployeeDTO) {
+    var employee = createEmployeeDTO.employee,
+        fullTime = createEmployeeDTO.fullTime;
+
+    return {
+        salary: fullTime.salary,
+        title: employee.title,
+        title_start_date: fullTime.startDate
+    };
+};
+
+var partTimeEmployeeMapping = function(createEmployeeDTO) {
+    var employee = createEmployeeDTO.employee,
+        partTime = createEmployeeDTO.partTime;
+
+    return {
+        hour_rate: partTime.hourlyRate,
+        job_title: employee.title,
+        duration: partTime.duration
+    };
+};
+
+var getEmployees = function(sqlConnector) {
+    var deferred = promises.defer();
+
+    sqlConnector.query("SELECT * "
+                        +"FROM `EMPLOYEES` as E, `FULLTIMES` as F "
+                        + "WHERE E.EID = F.EID")
+        .success(function(fullTimeEmployees) {
+            sqlConnector.query("SELECT * "
+                                +"FROM `EMPLOYEES` as E, `PARTTIMES` as P "
+                                +"WHERE E.EID = P.EID")
+                .success(function(partTimeEmployees){
+                    var employees = fullTimeEmployees.concat(partTimeEmployees);
+                    deferred.resolve(employees.map(function(employee){
+                        return {
+                            eid: employee.eid,
+                            ename: employee.ename,
+                            employmentStatus: employee.title_start_date ? 'Full Time' : 'Part Time'
+                        }
+                    }));
+                })
+                .error(function(error){
+                    deferred.reject(error);        
+                });
+        })
+        .failure(function(error) {
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
+};
+
+// var getEmployees = function(employeeModel) {
 //     var deferred = promises.defer();
 
-//     sqlConnector.query("SELECT * FROM " + tableName)
+//     employeeModel.findAll()
 //         .success(function(myTableRows) {
-//             console.log(myTableRows);
 //             deferred.resolve(myTableRows);
 //         })
 //         .failure(function(error) {
@@ -16,45 +78,22 @@ var Sequelize = require('sequelize'),
 //     return deferred.promise;
 // };
 
-var getEmployees = function(employeeModel) {
-    var deferred = promises.defer();
-
-    employeeModel.findAll()
-        .success(function(myTableRows) {
-            deferred.resolve(myTableRows);
-        })
-        .failure(function(error) {
-            deferred.reject(error);
-        });
-
-    return deferred.promise;
-}
-
 var addInitialEmployees = function(employeeModel) {
     employeeModel.bulkCreate([{
-        eid: 1,
         ename: 'Doug Colaizzo',
-        project: 'Big Bridge Project',
         title: 'Manager',
-        building_name: 'MLK',
-        office_number: 45,
-        phone: '201 953 1983'
+        phone: '201 953 1983',
+        dept: 'Gorillas'
     }, {
-        eid: 2,
         ename: 'Heather',
-        project: 'Contruct Monument of Doug',
         title: 'Boss',
-        building_name: 'Headquarters',
-        office_number: 1,
-        phone: '123456789'
+        phone: '123456789',
+        dept: 'Gorillas'
     }, {
-        eid: 3,
         ename: 'Michal',
-        project: 'Caldwell Highway',
         title: 'Manager',
-        building_name: 'Bloomfield Ave.',
-        office_number: 2,
-        phone: '987654321'
+        phone: '987654321',
+        dept: 'Gorillas'
     }, ]).success(function() {
         employeeModel.findAll().success(function(employees) {
             console.log(employees);
@@ -62,12 +101,53 @@ var addInitialEmployees = function(employeeModel) {
     });
 };
 
-var createEmployee = function(employeeModel, employeeParams){
-    employeeModel.create(employeeParams);
-}
+//Alternate syntax to create
+// Task
+//   .build({ title: 'foo', description: 'bar', deadline: new Date() })
+//   .save()
+
+var createFullTimeEmployee = function(employeeModel, employee, fullTimeModel, fullTime) {
+    var deferred = promises.defer();
+    employeeModel.create(employee)
+        .success(function(employee) {
+            fullTime.eid = employee.eid;
+            fullTimeModel.create(fullTime)
+                .success(function() {
+                    deferred.resolve("Successfully created full time employee " + employee.ename);
+                })
+                .error(function(error) {
+                    deferred.reject(error);
+                });
+        })
+        .error(function(error) {
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
+};
+
+var createPartTimeEmployee = function(employeeModel, employee, partTimeModel, partTime) {
+    var deferred = promises.defer();
+    employeeModel.create(employee)
+        .success(function(employee) {
+            partTime.eid = employee.eid;
+            partTimeModel.create(partTime)
+                .success(function() {
+                    deferred.resolve("Successfully created part time employee " + employee.ename);
+                })
+                .error(function(error) {
+                    deferred.reject(error);
+                });
+        })
+        .error(function(error) {
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
+};
 
 module.exports = function(app, database) {
-    app.get('/createInitialEmployeeData', function(request, response){
+    app.get('/createInitialEmployeeData', function(request, response) {
         var employeeModel = request.app.get('models').employee;
         addInitialEmployees(employeeModel);
         response.end();
@@ -75,16 +155,25 @@ module.exports = function(app, database) {
 
     app.post('/createEmployee', function(request, response) {
         var employeeModel = request.app.get('models').employee;
-        var employee = request.body.employee,
-            fullTime = request.body.fullTime,
-            partTime = request.body.partTime;
+        var employee = createEmployeeMapping(request.body);
 
-        console.log(employee, fullTime, partTime);
-        // createEmployee(employeeModel, request.body);
+        if (typeof(request.body.fullTime) !== "undefined" && Object.keys(request.body.fullTime).length) {
+            var fullTime = fullTimeEmployeeMapping(request.body);
+            console.log(employee, fullTime);
+            var result = createFullTimeEmployee(employeeModel, employee, request.app.get('models').fulltime, fullTime);
+        } else {
+            var partTime = partTimeEmployeeMapping(request.body);
+            console.log(employee, partTime);
+            var result = createPartTimeEmployee(employeeModel, employee, request.app.get('models').parttime, partTime);
+        }
+
+        response.send(result);
     });
 
     app.get('/employees', function(request, response) {
-        var employeeModel = request.app.get('models').employee;
-        response.json(getEmployees(employeeModel));
+        // var employeeModel = request.app.get('models').employee;
+        var sqlConnector = request.app.get('sequelize');
+
+        response.json(getEmployees(sqlConnector));
     });
 };

@@ -9,7 +9,7 @@ angular.module('sampleApp')
                 backdrop: true,
                 windowClass: 'modal',
                 controller: function($scope, $modalInstance, employee) {
-                    $scope.employee = employee;
+                    $scope.employee = employee.id ? employee : {};
                     $scope.selection = 'fullTime';
                     $scope.fullTime = {};
                     $scope.partTime = {};
@@ -47,10 +47,7 @@ angular.module('sampleApp')
 
         $http({
             method: 'GET',
-            url: '/showTable/',
-            params: {
-                tableName: 'testtable1'
-            }
+            url: '/employees'
         }).success(function(data, status, headers, config) {
             $scope.myData = data;
         }).error(function(data, status, headers, config) {
@@ -61,11 +58,14 @@ angular.module('sampleApp')
             data: 'myData',
             filterOptions: $scope.filterOptions,
             columnDefs: [{
-                field: 'id',
+                field: 'eid',
                 displayName: 'Id'
             }, {
-                field: 'name',
+                field: 'ename',
                 displayName: 'Name'
+            },{
+                field: 'employmentStatus',
+                displayName: 'Employment Status'
             }]
         };
     });;
