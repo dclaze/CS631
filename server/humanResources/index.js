@@ -1,5 +1,4 @@
-var Sequelize = require('sequelize'),
-    promises = require('q');
+var promises = require('q');
 
 var createEmployeeMapping = function(createEmployeeDTO) {
     var employee = createEmployeeDTO.employee
@@ -33,19 +32,18 @@ var partTimeEmployeeMapping = function(createEmployeeDTO) {
     };
 };
 
+var FullTimeEmployeesQuery = "SELECT * " + "FROM `EMPLOYEES` as E, `FULLTIMES` as F " + "WHERE E.EID = F.EID";
+var PartTimeEmployeesQuery = "SELECT * " + "FROM `EMPLOYEES` as E, `PARTTIMES` as P " + "WHERE E.EID = P.EID";
+
 var getEmployees = function(sqlConnector) {
     var deferred = promises.defer();
 
-    sqlConnector.query("SELECT * "
-                        +"FROM `EMPLOYEES` as E, `FULLTIMES` as F "
-                        + "WHERE E.EID = F.EID")
+    sqlConnector.query(FullTimeEmployeesQuery)
         .success(function(fullTimeEmployees) {
-            sqlConnector.query("SELECT * "
-                                +"FROM `EMPLOYEES` as E, `PARTTIMES` as P "
-                                +"WHERE E.EID = P.EID")
-                .success(function(partTimeEmployees){
+            sqlConnector.query()
+                .success(function(partTimeEmployees) {
                     var employees = fullTimeEmployees.concat(partTimeEmployees);
-                    deferred.resolve(employees.map(function(employee){
+                    deferred.resolve(employees.map(function(employee) {
                         return {
                             eid: employee.eid,
                             ename: employee.ename,
@@ -53,8 +51,8 @@ var getEmployees = function(sqlConnector) {
                         }
                     }));
                 })
-                .error(function(error){
-                    deferred.reject(error);        
+                .error(function(error) {
+                    deferred.reject(error);
                 });
         })
         .failure(function(error) {

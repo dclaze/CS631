@@ -13,8 +13,16 @@
 </div>
 
 <h3>Pay Salary</h3>
-Show grid with all employees tax information for a given month.
-Show whether or not employees were paid yet
-
-<h3>Salary and Tax History</h3>
-10% federal tax, 5% state tax, and 3% for other taxes
+<div ng-controller="SalaryGridController">
+    <strong>Search:</strong>
+    <span>
+        <input type="text" ng-model="filterOptions.filterText" />
+        <input type="button" ng-disabled="filterOptions.paid" class="btn btn-primary" value="{{payButtonString}}" ng-click="onPaySalaryClick($event)"></button>
+         
+        <button class="btn btn-primary" ng-model="previousMonthString" ng-click="onPreviousMonthClick($event)"><</button>
+        <span ng-bind="currentMonthString"></span>
+        <button class="btn btn-primary" ng-model="nextMonthString" ng-click="onPreviousMonthClick($event)">></button>
+    </span>
+    <div class="gridStyle" ng-grid="gridOptions">
+    </div>
+</div>
