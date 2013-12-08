@@ -40,7 +40,7 @@ var getEmployees = function(sqlConnector) {
 
     sqlConnector.query(FullTimeEmployeesQuery)
         .success(function(fullTimeEmployees) {
-            sqlConnector.query()
+            sqlConnector.query(PartTimeEmployeesQuery)
                 .success(function(partTimeEmployees) {
                     var employees = fullTimeEmployees.concat(partTimeEmployees);
                     deferred.resolve(employees.map(function(employee) {
@@ -55,7 +55,7 @@ var getEmployees = function(sqlConnector) {
                     deferred.reject(error);
                 });
         })
-        .failure(function(error) {
+        .error(function(error) {
             deferred.reject(error);
         });
 
@@ -169,7 +169,6 @@ module.exports = function(app, database) {
     });
 
     app.get('/employees', function(request, response) {
-        // var employeeModel = request.app.get('models').employee;
         var sqlConnector = request.app.get('sequelize');
 
         response.json(getEmployees(sqlConnector));
