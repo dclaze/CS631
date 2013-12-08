@@ -1,5 +1,5 @@
 angular.module('sampleApp')
-    .controller('EmployeeGridController', function($scope, $http, $modal) {
+    .controller('EmployeeGridController', function($scope, $http, $modal, $rootScope) {
         $scope.employee = {};
         $scope.employeeCreatedError = "";
 
@@ -24,6 +24,7 @@ angular.module('sampleApp')
                             }
                         }).success(function(data, status, headers, config) {
                             $modalInstance.dismiss('cancel');
+                            loadEmployees();
                         }).error(function(data, status, headers, config) {
                             $scope.employeeCreatedError = data;
                         });
@@ -41,18 +42,24 @@ angular.module('sampleApp')
             });
         };
 
+        $scope.onRefeshEmployeesGridClick = function(){
+            loadEmployees();
+        }
+
         $scope.filterOptions = {
             filterText: ''
         };
 
-        $http({
-            method: 'GET',
-            url: '/employees'
-        }).success(function(data, status, headers, config) {
-            $scope.myData = data;
-        }).error(function(data, status, headers, config) {
-            console.error("Server returned status ", status, data);
-        });
+        var loadEmployees = function() {
+            $http({
+                method: 'GET',
+                url: '/employees'
+            }).success(function(data, status, headers, config) {
+                $scope.myData = data;
+            }).error(function(data, status, headers, config) {
+                console.error("Server returned status ", status, data);
+            });
+        };
 
         $scope.gridOptions = {
             data: 'myData',
@@ -63,9 +70,11 @@ angular.module('sampleApp')
             }, {
                 field: 'ename',
                 displayName: 'Name'
-            },{
+            }, {
                 field: 'employmentStatus',
                 displayName: 'Employment Status'
             }]
         };
+
+        loadEmployees();
     });;

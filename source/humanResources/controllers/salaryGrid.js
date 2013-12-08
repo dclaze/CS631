@@ -1,5 +1,5 @@
 angular.module('sampleApp')
-    .controller('SalaryGridController', function($scope, $http, $modal) {
+    .controller('SalaryGridController', function($scope, $http, $modal, $rootScope) {
         var monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
@@ -10,10 +10,14 @@ angular.module('sampleApp')
         };
         $scope.$watch("filterOptions.currentMonth", function(date) {
             $scope.currentMonthString = monthNames[date.getUTCMonth()] + " " + date.getUTCFullYear();
-            console.log("Load GRID!");
+            loadSalaries(date);
         });
         $scope.$watch("filterOptions.paid", function(paid) {
             $scope.payButtonString = paid ? "Paid" : "Pay";
+        });
+
+        $rootScope.$on('employeeCreated',function(){
+        	alert("GOT IT!");
         });
 
         $scope.onPreviousMonthClick = function() {
@@ -25,32 +29,35 @@ angular.module('sampleApp')
             $scope.filterOptions.currentMonth = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
         };
 
-        var formatDate = function(date){
-        	return date ? new Date(date).toLocaleDateString() : "" 
+        var formatDate = function(date) {
+            return date ? new Date(date).toLocaleDateString() : ""
         };
-        var formatDollars = function(dollarValue){
-        	return dollarValue ? dollarValue.toFixed(2): 0.00;
+        var formatDollars = function(dollarValue) {
+            return dollarValue ? dollarValue.toFixed(2) : 0.00;
         };
 
-        $http({
-            method: 'GET',
-            url: '/salaries',
-            params: {
-                date: $scope.filterOptions.currentMonth
-            }
-        }).success(function(salaryData, status, headers, config) {
-            formattedSalaryData = salaryData.map(function(item) {
-                item.title_start_date = formatDate(item.title_start_date);
-                for(var i in item){
-                	var field = item[i];
-                	if(typeof(field)==="number")
-                		item[i] = formatDollars(field);
+        var loadSalaries = function(date) {
+            $http({
+                method: 'GET',
+                url: '/salaries',
+                params: {
+                    date: $scope.filterOptions.currentMonth
                 }
+            }).success(function(salaryData, status, headers, config) {
+                formattedSalaryData = salaryData.map(function(item) {
+                    item.title_start_date = formatDate(item.title_start_date);
+                    for (var i in item) {
+                        var field = item[i];
+                        if (typeof(field) === "number")
+                            item[i] = formatDollars(field);
+                    }
+                });
+                $scope.salaryData = salaryData;
+            }).error(function(data, status, headers, config) {
+                console.error("Server returned status ", status, data);
             });
-            $scope.salaryData = salaryData;
-        }).error(function(data, status, headers, config) {
-            console.error("Server returned status ", status, data);
-        });
+        };
+
 
         $scope.gridOptions = {
             data: 'salaryData',
