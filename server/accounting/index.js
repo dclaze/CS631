@@ -41,16 +41,43 @@ var getUnpaidSalaries = function(sqlConnector) {
     return deferred.promise;
 };
 
+var salaryHistoryMapping = function(dateEntered, salary){
+    // return {
+    //     eid: salary.eid,
+    //     ssn: salary.ssn,
+    //     paid_date: dateEntered,
+    //     month:        
+    // }
+}
+
+var paySalaries = function(salaryModel, salaries){
+    var deferred = q.defer(); 
+    salaryModel.bulkCreate(salaries)
+        .success(function(enteredSalaries){
+            deferred.resolve(enteredSalaries);
+        })
+        .error(function(error){
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
+};
+
 module.exports = function(app) {
     app.get('/salaries', function(request, response) {
         var sqlConnector = app.get('sequelize');
-        var dateStr = request.query.date,
-            date = new Date(JSON.parse(date));
-
+        var dateStr = request.query.date;
+            date = new Date(JSON.parse(dateStr));
+        console.log(request.query);
         response.send(getUnpaidSalaries(sqlConnector));
     });
     app.post('/paySalaries', function(request, response) {
-        var salariesToPay = request.body;
-        console.log(salariesToPay);
+        var salariesToPay = request.body.salariesToPay,
+            date = request.body.dateEntered,
+            month = request.body.month,
+            year = request.body.year;
+        console.log(request.body);
+        // var salaryHistoryModel = request.app.get('models').salary_history;
+        // paySalaries(salaryModel, salariesToPay);    
     });
 };

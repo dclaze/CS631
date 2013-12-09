@@ -3,9 +3,15 @@ angular.module('sampleApp')
         var monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
+
+        var prepareMonth = function(){
+            var date = new Date();
+            return new Date(date.getFullYear(), date.getMonth(), 1);
+        }
+
         $scope.filterOptions = {
             filterText: '',
-            currentMonth: new Date(),
+            currentMonth: prepareMonth(),
             paid: false
         };
         $scope.$watch("filterOptions.currentMonth", function(date) {
@@ -72,6 +78,9 @@ angular.module('sampleApp')
                 method: 'POST',
                 url: '/paySalaries',
                 data: {
+                    dateEntered: new Date(),
+                    month: $scope.filterOptions.currentMonth.getUTCMonth(),
+                    year: $scope.filterOptions.currentMonth.getUTCFullYear(),
                     salariesToPay: salariesToPay
                 }
             }).success(function(response, status, headers, config) {
