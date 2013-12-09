@@ -1,10 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('Salary_History', {
-        eid: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
-        },
+        eid:  DataTypes.INTEGER,
         ssn: DataTypes.TEXT,
         paid_date: DataTypes.DATE,
         month: DataTypes.INTEGER,

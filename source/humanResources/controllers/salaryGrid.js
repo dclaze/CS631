@@ -4,9 +4,9 @@ angular.module('sampleApp')
             "July", "August", "September", "October", "November", "December"
         ];
 
-        var prepareMonth = function(){
+        var prepareMonth = function() {
             var date = new Date();
-            return new Date(date.getFullYear(), date.getMonth(), 1);
+            return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1);
         }
 
         $scope.filterOptions = {
@@ -35,8 +35,8 @@ angular.module('sampleApp')
             $scope.filterOptions.currentMonth = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
         };
 
-        $scope.onPaySalaryClick = function(){
-            paySalaries();            
+        $scope.onPaySalaryClick = function() {
+            paySalaries();
         };
 
         $scope.onRefeshSalaryGridClick = function() {
@@ -72,7 +72,7 @@ angular.module('sampleApp')
             });
         };
 
-        var paySalaries = function(){
+        var paySalaries = function() {
             var salariesToPay = $scope.gridOptions.ngGrid.data;
             $http({
                 method: 'POST',
@@ -87,7 +87,7 @@ angular.module('sampleApp')
                 console.log(response);
             }).error(function(data, status, headers, config) {
                 console.error("Server returned status ", status, data);
-            });  
+            });
         };
 
         $scope.gridOptions = {
@@ -105,9 +105,6 @@ angular.module('sampleApp')
             }, {
                 field: 'salary',
                 displayName: 'Salary'
-            }, {
-                field: 'hourlyRate',
-                displayName: 'Hourly Rate'
             }, {
                 field: 'federalTax',
                 displayName: 'Federal (10%)'
