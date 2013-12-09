@@ -25,6 +25,7 @@ angular.module('sampleApp')
                         }).success(function(data, status, headers, config) {
                             $modalInstance.dismiss('cancel');
                             loadEmployees();
+                            $rootScope.$emit('employeeCreated',data);
                         }).error(function(data, status, headers, config) {
                             $scope.employeeCreatedError = data;
                         });

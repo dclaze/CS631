@@ -23,7 +23,7 @@ angular.module('sampleApp')
         });
 
         $rootScope.$on('employeeCreated', function() {
-            loadSalaries()
+            loadSalaries();
         });
 
         $scope.onPreviousMonthClick = function() {
@@ -59,6 +59,14 @@ angular.module('sampleApp')
             return isPaid;
         };
 
+        var getUnpaid = function() {
+            var salariesToPay = $scope.gridOptions.ngGrid.data;
+
+            return salariesToPay.filter(function(salary) {
+                return salary.paid_date == null;
+            });
+        };
+
         var loadSalaries = function(date) {
             $http({
                 method: 'GET',
@@ -85,7 +93,6 @@ angular.module('sampleApp')
         };
 
         var paySalaries = function() {
-            var salariesToPay = $scope.gridOptions.ngGrid.data;
             $http({
                 method: 'POST',
                 url: '/paySalaries',
@@ -93,10 +100,10 @@ angular.module('sampleApp')
                     dateEntered: new Date(),
                     month: $scope.filterOptions.currentMonth.getUTCMonth(),
                     year: $scope.filterOptions.currentMonth.getUTCFullYear(),
-                    salariesToPay: salariesToPay
+                    salariesToPay: getUnpaid()
                 }
             }).success(function(response, status, headers, config) {
-                console.log(response);
+                loadSalaries();
             }).error(function(data, status, headers, config) {
                 console.error("Server returned status ", status, data);
             });
