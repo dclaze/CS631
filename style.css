@@ -4,6 +4,11 @@
     height: 300px;
 }
 
+.red {
+    background-color: #FF6666;
+    color: white;
+}
+
 body {
   padding-top: 40px;
   padding-bottom: 40px;

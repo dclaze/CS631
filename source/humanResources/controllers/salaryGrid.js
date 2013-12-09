@@ -50,6 +50,15 @@ angular.module('sampleApp')
             return dollarValue ? dollarValue.toFixed(2) : 0.00;
         };
 
+        var isPaid = function(salaries) {
+            var isPaid = true;
+            salaries.forEach(function(salary) {
+                if (!salary.paid_date)
+                    isPaid = false;
+            });
+            return isPaid;
+        };
+
         var loadSalaries = function(date) {
             $http({
                 method: 'GET',
@@ -58,15 +67,18 @@ angular.module('sampleApp')
                     date: $scope.filterOptions.currentMonth
                 }
             }).success(function(salaryData, status, headers, config) {
-                formattedSalaryData = salaryData.map(function(item) {
+                var formattedSalaryData = salaryData.map(function(item) {
                     item.title_start_date = formatDate(item.title_start_date);
                     for (var i in item) {
                         var field = item[i];
                         if (typeof(field) === "number" && i != "eid")
                             item[i] = formatDollars(field);
                     }
+                    return item;
                 });
-                $scope.salaryData = salaryData;
+
+                $scope.salaryData = formattedSalaryData;
+                $scope.filterOptions.paid = isPaid(formattedSalaryData);
             }).error(function(data, status, headers, config) {
                 console.error("Server returned status ", status, data);
             });
@@ -93,6 +105,7 @@ angular.module('sampleApp')
         $scope.gridOptions = {
             data: 'salaryData',
             filterOptions: $scope.filterOptions,
+            rowTemplate: '<div style="height: 100%" ng-class="{red: row.getProperty(\'paid_date\')==null}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' + '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' + '<div ng-cell></div>' + '</div></div>',
             columnDefs: [{
                 field: 'eid',
                 displayName: 'Id',
