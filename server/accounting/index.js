@@ -1,24 +1,23 @@
 var q = require('q');
 
-var calculateTaxForSalary = function(salary, percentage){
-    return (salary/12) * (percentage/100);
-}
-var calculateTaxForHourly = function(hourlyRate, durationInHours, percentage){
-    return hourlyRate * durationInHours * (percentage/100);
-}
+var calculateTaxForSalary = function(salary, percentage) {
+    return (salary / 12) * (percentage / 100);
+};
+var calculateTaxForHourly = function(hourlyRate, durationInHours, percentage) {
+    return hourlyRate * durationInHours * (percentage / 100);
+};
 
 var FullTimeEmployeesQuery = "SELECT * " + "FROM `EMPLOYEES` as E, `FULLTIMES` as F " + "WHERE E.EID = F.EID";
 
-var getSalaries = function(sqlConnector) {
+var getUnpaidSalaries = function(sqlConnector) {
     var deferred = q.defer();
     sqlConnector.query(FullTimeEmployeesQuery)
         .success(function(fullTimeEmployees) {
-            console.log(fullTimeEmployees);
-            var fullTimeEmployeesWithSalaryInfo = fullTimeEmployees.map(function(employee){
+            var fullTimeEmployeesWithSalaryInfo = fullTimeEmployees.map(function(employee) {
                 var beforeTax = calculateTaxForSalary(employee.salary, 100),
-                    federalTax = calculateTaxForSalary(employee.salary,10),
+                    federalTax = calculateTaxForSalary(employee.salary, 10),
                     stateTax = calculateTaxForSalary(employee.salary, 5),
-                    otherTax =calculateTaxForSalary(employee.salary, 3),
+                    otherTax = calculateTaxForSalary(employee.salary, 3),
                     afterTax = beforeTax - federalTax - stateTax - otherTax;
 
                 return {
@@ -45,6 +44,13 @@ var getSalaries = function(sqlConnector) {
 module.exports = function(app) {
     app.get('/salaries', function(request, response) {
         var sqlConnector = app.get('sequelize');
-        response.send(getSalaries(sqlConnector))
+        var dateStr = request.query.date,
+            date = new Date(JSON.parse(date));
+
+        response.send(getUnpaidSalaries(sqlConnector));
+    });
+    app.post('/paySalaries', function(request, response) {
+        var salariesToPay = request.body;
+        console.log(salariesToPay);
     });
 };

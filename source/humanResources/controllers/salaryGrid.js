@@ -16,8 +16,8 @@ angular.module('sampleApp')
             $scope.payButtonString = paid ? "Paid" : "Pay";
         });
 
-        $rootScope.$on('employeeCreated',function(){
-        	alert("GOT IT!");
+        $rootScope.$on('employeeCreated', function() {
+            loadSalaries()
         });
 
         $scope.onPreviousMonthClick = function() {
@@ -28,6 +28,14 @@ angular.module('sampleApp')
             var currentDate = $scope.filterOptions.currentMonth;
             $scope.filterOptions.currentMonth = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
         };
+
+        $scope.onPaySalaryClick = function(){
+            paySalaries();            
+        };
+
+        $scope.onRefeshSalaryGridClick = function() {
+            loadSalaries();
+        }
 
         var formatDate = function(date) {
             return date ? new Date(date).toLocaleDateString() : ""
@@ -48,7 +56,7 @@ angular.module('sampleApp')
                     item.title_start_date = formatDate(item.title_start_date);
                     for (var i in item) {
                         var field = item[i];
-                        if (typeof(field) === "number")
+                        if (typeof(field) === "number" && i != "eid")
                             item[i] = formatDollars(field);
                     }
                 });
@@ -58,6 +66,20 @@ angular.module('sampleApp')
             });
         };
 
+        var paySalaries = function(){
+            var salariesToPay = $scope.gridOptions.ngGrid.data;
+            $http({
+                method: 'POST',
+                url: '/paySalaries',
+                data: {
+                    salariesToPay: salariesToPay
+                }
+            }).success(function(response, status, headers, config) {
+                console.log(response);
+            }).error(function(data, status, headers, config) {
+                console.error("Server returned status ", status, data);
+            });  
+        };
 
         $scope.gridOptions = {
             data: 'salaryData',
