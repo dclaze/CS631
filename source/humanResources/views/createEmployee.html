@@ -37,13 +37,13 @@
                     <label for="salary">Salary</label>
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
-                        <input type="number" class="form-control" id="salary" placeholder="Salary" ng-model="fullTime.salary">
+                        <input  id="salary" type="number" class="form-control" ng-required="selection=='fullTime'" placeholder="Salary" ng-model="fullTime.salary">
                         <span class="input-group-addon">.00</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="startDate">Start Date</label>
-                    <input id="startDate" type="text" class="form-control" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="Start Date" ng-model="fullTime.startDate">
+                    <input id="startDate" type="text" class="form-control" ng-required="selection=='fullTime'" data-date-format="mm/dd/yyyy" bs-datepicker placeholder="Start Date" ng-model="fullTime.startDate">
                 </div>
             </div>
             <div class="animate-switch" ng-switch-when="partTime">
@@ -51,21 +51,21 @@
                     <label for="hourlyRate">Hourly Rate</label>
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
-                        <input type="number" class="form-control" id="hourlyRate" placeholder="Hourly Rate" ng-model="partTime.hourlyRate">
+                        <input type="number" class="form-control" id="hourlyRate" ng-required="selection=='partTime'" placeholder="Hourly Rate" ng-model="partTime.hourlyRate">
                         <span class="input-group-addon">.00</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="duration">Duration in Days</label>
-                    <input id="duration" type="number" class="form-control" placeholder="Duration in Days" ng-model="partTime.duration">
+                    <input id="duration" type="number" class="form-control" ng-required="selection=='partTime'" placeholder="Duration in Days" ng-model="partTime.duration">
                 </div>
                 <div class="form-group">
                     <label for="startDate">Start Date</label>
-                    <input id="startDate" type="text" class="form-control" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="Start Date" ng-model="partTime.startDate">
+                    <input id="startDate" type="text" class="form-control" ng-required="selection=='partTime'" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="Start Date" ng-model="partTime.startDate">
                 </div>
                 <div class="form-group">
                     <label for="endDate">End Date</label>
-                    <input id="endDate" type="text" class="form-control" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="End Date" ng-model="partTime.endDate">
+                    <input id="endDate" type="text" class="form-control" ng-required="selection=='partTime'" data-date-format="dd/mm/yyyy" bs-datepicker placeholder="End Date" ng-model="partTime.endDate">
                 </div>
             </div>
         </div>

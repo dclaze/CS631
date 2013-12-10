@@ -44,14 +44,19 @@ sampleApp.controller('HomeController', function($scope, $location) {
     $scope.onERDiagramButtonClick = function() {
         window.location.href = "/resources/ERDiagram.jpg";
     };
-    $scope.onERMappingButtonClick = function() {
-        window.location.href = "/resources/CS631_DataBase Design_DC_MK.docx"
+    $scope.onProjectButtonClick = function() {
+        window.location.href = "/resources/CS631_DataBase Project_Report_DC_MK.docx"
     };
     $scope.onGetStartedClick = function() {
         $location.path('/humanResources');
     };
 });
 
+sampleApp.controller('MenuController',function($scope, $location){
+    $scope.isActive = function (viewLocation) { 
+        return viewLocation === $location.path();
+    };
+});
 
 sampleApp.controller('HumanResourcesController', function($scope) {
     $scope.message = 'This is human resouces screen. It is designed to allow you to easily create part time and full time employees and get them paid!';
