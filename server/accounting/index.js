@@ -21,10 +21,10 @@ var salaryHistoryQueryBuilder = function(year, month) {
     };
 
     var fullTimeEmployeeSalaryHistory = ["SELECT F.eid, E.ename, F.title_start_date, F.SALARY AS current_salary, SH.SALARY AS paid_salary, SH.paid_date, SH.month, SH.year, SH.fed_tax, SH.state_tax, SH.other_tax, (SH.EID IS NOT NULL) AS isPaid",
-        " FROM FULLTIMES F",
-        " LEFT JOIN SALARY_HISTORIES SH ON SH.EID = F.EID",
+        " FROM FULLTIME F",
+        " LEFT JOIN SALARY_HISTORY SH ON SH.EID = F.EID",
         " AND ((STR_TO_DATE(CONCAT(SH.YEAR,LPAD(SH.MONTH,2,'0'),'01'),'%Y%m%d') BETWEEN '" + beginningOfMonth(year, month) + "' AND '" + endOfMonth(year, month) + "') OR SH.SALARY IS NULL)",
-        " LEFT JOIN EMPLOYEES E ON F.EID = E.EID", " WHERE E.EID IS NOT NULL AND F.TITLE_START_DATE <='" + endOfMonth(year, month) + "'"
+        " LEFT JOIN EMPLOYEE E ON F.EID = E.EID", " WHERE E.EID IS NOT NULL AND F.TITLE_START_DATE <='" + endOfMonth(year, month) + "'"
     ].join("");
     return fullTimeEmployeeSalaryHistory;
 };
@@ -101,10 +101,10 @@ var hourlyHistoryQueryBuilder = function(year, month) {
         return [year, month, day].join("-");
     };
     var partTimeHourlyWageHistory = ["SELECT P.eid, E.ename, P.hour_rate AS current_rate, HH.hour_rate as paid_rate, P.duration,HH.fed_tax, HH.state_tax, HH.other_tax,p.START_DATE, P.END_DATE,HH.paid_date,(HH.EID IS NOT NULL) AS isPaid",
-        " FROM PARTTIMES P",
-        " LEFT JOIN HOURLY_HISTORIES HH ON HH.EID = P.EID",
-        " LEFT JOIN EMPLOYEES E ON E.EID = P.EID",
-        " WHERE  P.END_DATE BETWEEN '", beginningOfMonth(year, month), "' AND '", endOfMonth(year, month), "'"
+        " FROM PARTTIME P",
+        " LEFT JOIN HOURLY_HISTORY HH ON HH.EID = P.EID",
+        " LEFT JOIN EMPLOYEE E ON E.EID = P.EID",
+        " WHERE P.END_DATE BETWEEN '", beginningOfMonth(year, month), "' AND '", endOfMonth(year, month), "'"
     ].join("");
     return partTimeHourlyWageHistory;
 };

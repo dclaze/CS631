@@ -34,8 +34,8 @@ var partTimeEmployeeMapping = function(createEmployeeDTO) {
     };
 };
 
-var FullTimeEmployeesQuery = "SELECT * " + "FROM `EMPLOYEES` as E, `FULLTIMES` as F " + "WHERE E.EID = F.EID";
-var PartTimeEmployeesQuery = "SELECT * " + "FROM `EMPLOYEES` as E, `PARTTIMES` as P " + "WHERE E.EID = P.EID";
+var FullTimeEmployeesQuery = "SELECT * " + "FROM EMPLOYEE as E, FULLTIME as F " + "WHERE E.EID = F.EID";
+var PartTimeEmployeesQuery = "SELECT * " + "FROM EMPLOYEE as E, PARTTIME as P " + "WHERE E.EID = P.EID";
 
 var getEmployees = function(sqlConnector) {
     var deferred = promises.defer();

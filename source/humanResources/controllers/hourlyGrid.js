@@ -14,16 +14,17 @@ angular.module('sampleApp')
             currentMonth: prepareMonth(),
             paid: false
         };
+
         $scope.$watch("filterOptions.currentMonth", function(date) {
             $scope.currentMonthString = monthNames[date.getUTCMonth()] + " " + date.getUTCFullYear();
             loadHourlyWages(date);
         });
+
         $scope.$watch("filterOptions.paid", function(paid) {
             $scope.payButtonString = paid ? "Paid" : "Pay";
         });
 
         $rootScope.$on('employeeCreated', function() {
-            debugger;
             loadHourlyWages();
         });
 
