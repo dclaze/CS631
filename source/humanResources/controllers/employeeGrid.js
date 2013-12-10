@@ -20,6 +20,7 @@ angular.module('sampleApp')
                             data: {
                                 employee: $scope.employee,
                                 fullTime: $scope.fullTime,
+                                isFullTime: $scope.fullTime.salary && $scope.fullTime.startDate, //TODO: Use active switch
                                 partTime: $scope.partTime
                             }
                         }).success(function(data, status, headers, config) {

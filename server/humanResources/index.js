@@ -28,7 +28,9 @@ var partTimeEmployeeMapping = function(createEmployeeDTO) {
     return {
         hour_rate: partTime.hourlyRate,
         job_title: employee.title,
-        duration: partTime.duration
+        duration: partTime.duration,
+        start_date: partTime.startDate,
+        end_date: partTime.endDate
     };
 };
 
@@ -153,16 +155,16 @@ module.exports = function(app, database) {
 
     app.post('/createEmployee', function(request, response) {
         var employeeModel = request.app.get('models').employee;
-        var employee = createEmployeeMapping(request.body);
+        var employee = createEmployeeMapping(request.body),
+            isFullTime = request.body.isFullTime,
+            result;
 
-        if (typeof(request.body.fullTime) !== "undefined" && Object.keys(request.body.fullTime).length) {
-            var fullTime = fullTimeEmployeeMapping(request.body);
-            console.log(employee, fullTime);
-            var result = createFullTimeEmployee(employeeModel, employee, request.app.get('models').fulltime, fullTime);
+        if (isFullTime) {
+            var fullTime = fullTimeEmployeeMapping(request.body),
+            result = createFullTimeEmployee(employeeModel, employee, request.app.get('models').fulltime, fullTime);
         } else {
-            var partTime = partTimeEmployeeMapping(request.body);
-            console.log(employee, partTime);
-            var result = createPartTimeEmployee(employeeModel, employee, request.app.get('models').parttime, partTime);
+            var partTime = partTimeEmployeeMapping(request.body),
+            result = createPartTimeEmployee(employeeModel, employee, request.app.get('models').parttime, partTime);
         }
 
         response.send(result);

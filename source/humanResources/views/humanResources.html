@@ -28,3 +28,19 @@
     <div class="gridStyle" ng-grid="gridOptions">
     </div>
 </div>
+
+<h3>Pay Hourly</h3>
+<div ng-controller="HourlyGridController">
+    <strong>Search:</strong>
+    <span>
+        <input type="text" ng-model="filterOptions.filterText" />
+        <input type="button" ng-disabled="filterOptions.paid" class="btn btn-primary" value="{{payButtonString}}" ng-click="onPayHourlyClick($event)"></button>
+         
+        <button class="btn btn-primary" ng-model="previousMonthString" ng-click="onPreviousMonthClick($event)"><</button>
+        <span ng-bind="currentMonthString"></span>
+        <button class="btn btn-primary" ng-model="nextMonthString" ng-click="onNextMonthClick($event)">></button>
+        <button class="btn btn-small" ng-click="onRefeshSalaryGridClick($event)"><span class="icon-refresh"></span></button>
+    </span>
+    <div class="gridStyle" ng-grid="gridOptions">
+    </div>
+</div>
