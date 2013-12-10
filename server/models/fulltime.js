@@ -4,5 +4,7 @@ module.exports = function(sequelize, DataTypes) {
         salary: DataTypes.INTEGER,
         title: DataTypes.TEXT,
         title_start_date: DataTypes.DATE
+    },{
+    	tableName: 'fullTime'
     });
 };

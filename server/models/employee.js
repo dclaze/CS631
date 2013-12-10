@@ -9,5 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         title: DataTypes.TEXT,
         phone: DataTypes.TEXT,
         dept: DataTypes.TEXT
+    },{
+        tableName: 'employee'
     });
 };
