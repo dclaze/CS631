@@ -1,2 +1,11 @@
-<h2>Home</h2>
-{{ message }}
+<div ng-controller="HomeController" class="hero-unit">
+    <h1>Welcome CS 631!</h1>
+
+    Doug Colaizzo | Michal Kuszczak
+    <p>
+    	&nbsp
+        <button class="btn btn-large btn-block btn-primary" type="button" ng-click="onGetStartedClick()">Get Started!</button>
+        <button class="btn btn-large btn-block" type="button" ng-click="onERDiagramButtonClick()">ER Diagram</button>
+        <button class="btn btn-large btn-block" type="button" ng-click="onERMappingButtonClick()">Mapping</button>
+    </p>
+</div>

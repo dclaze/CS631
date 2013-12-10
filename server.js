@@ -8,6 +8,7 @@ var config = require('./config').init('config.json'),
 app.use(require('express-promise')())
     .use(express.static(__dirname));
 app.use(express.bodyParser());
+app.use(express.basicAuth(config.authentication.username, config.authentication.password));
 
 require('./server/routes.js')(app, db);
 console.log(db.models);

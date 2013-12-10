@@ -1,9 +1,13 @@
 {
-	"mysql":{
-		"database": "test",
-		"username": "node_server",
-		"password": "cs631",
-		"host": "cs631fp-mysql.hopto.org",
-		"port": null
-	}
+    "mysql": {
+        "database": "test",
+        "username": "node_server",
+        "password": "cs631",
+        "host": "cs631fp-mysql.hopto.org",
+        "port": null
+    },
+    "authentication":{
+        "username": "cs631",
+        "password": "s3cr3t"
+    }
 }
