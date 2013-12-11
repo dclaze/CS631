@@ -1,7 +1,70 @@
 <h2>Project Management</h2>
 {{message}}
 
-<br>
-<div ng-controller="ProjectManangementController">
-    <button type="button" class="btn btn-large btn-primary ng-scope" ng-click="onCreateProjectClick($event)">Create Project</button>
+<h3>Teams</h3>
+<div ng-controller="TeamController">
+    <strong>Search:</strong>
+    <span>
+        <input type="text" ng-model="filterOptions.filterText" />
+        <button class="btn btn-primary" ng-click="onCreateTeamClick($event)">Create Team</button>
+        <button class="btn btn-small" ng-click="onRefeshTeamsGridClick($event)">
+            <span class="icon-refresh"></span>
+        </button>
+    </span>
+    <div class="gridStyle" ng-grid="gridOptions">
+    </div>
 </div>
+
+<h3>Projects</h3>
+Click on a project to view it's milestone
+<div ng-controller="ProjectController">
+    <strong>Search:</strong>
+    <span>
+        <input type="text" ng-model="filterOptions.filterText" />
+        <button class="btn btn-primary" ng-click="onCreateProjectClick($event)">Create Project</button>
+        <button class="btn btn-small" ng-click="onRefeshProjectsGridClick($event)">
+            <span class="icon-refresh"></span>
+        </button>
+    </span>
+    <div class="gridStyle" ng-grid="gridOptions">
+    </div>
+</div>
+
+<!-- Create Department
+
+Create Division
+
+Create Team
+<div>
+Name
+MultiSelect: List of Employees  Produces Team Workers
+Team Manager: List of Employees
+</div>
+Produces Team, TeamWorkers
+
+List of Teams
+PID CAN BE NULL / TEAM ID / TEAM NAME / MAN HOURS / MANAGER ID (EMPLOYEE ID)
+
+Create Project
+<div>
+	Name
+	List of Teams - Id - Project Manager
+	Budget
+	Start Date
+	End Date
+	List of Departments
+</div>
+Loads teams and assigns the team id
+
+List of Projects
+<div>
+	PROJECT TABLE + 
+	Number of Employees
+	Number of Man Hours
+	Operating Cost -> Total Cost Given Salary * Time
+</div>
+
+List of Project Milestones in Modal
+<div>
+
+</div> -->

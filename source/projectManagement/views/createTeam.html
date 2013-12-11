@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3>Create Team</h3>
+</div>
+<form name="createTeam" class="form-horizontal" role="form" ng-submit="submit()">
+    <div class="form-group">
+        <label for="teamName" class="col-sm-2 control-label">Name: </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="teamName" placeholder="Team Name" ng-model="team.name" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="employeeDropdown" class="col-sm-2 control-label">Employees: </label>
+        <div class="col-sm-10">
+            <select class="multiselect" data-placeholder="Employee"  ng-model="team.employeeIds" ng-options="e.eid as e.ename for e in employees" multiselect-dropdown multiple="multiple"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="managerDropdown" class="col-sm-2 control-label">Manager: </label>
+        <select ng-model="team.managerId" ng-options="e.eid as e.ename for e in employees"></select>
+    </div>
+    <div>{{teamCreateError}}</div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+        <input type="submit" class="btn primary-btn" value="Create" />
+    </div>
+</form>
