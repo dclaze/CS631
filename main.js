@@ -42,7 +42,7 @@ sampleApp.run(function($rootScope, $location, $http) {
 sampleApp.controller('HomeController', function($scope, $location) {
     $scope.message = 'This is the home screen';
     $scope.onERDiagramButtonClick = function() {
-        window.location.href = "/resources/ERDiagram.jpg";
+        window.location.href = "/resources/ERDiagram.png";
     };
     $scope.onProjectButtonClick = function() {
         window.location.href = "/resources/CS631_DataBase Project_Report_DC_MK.docx"

@@ -21,7 +21,12 @@ angular.module('sampleApp')
                                 employee: $scope.employee,
                                 fullTime: $scope.fullTime,
                                 isFullTime: $scope.fullTime.salary && $scope.fullTime.startDate, //TODO: Use active switch
-                                partTime: $scope.partTime
+                                partTime: {
+                                    hourlyRate: $scope.partTime.hourlyRate || 0,
+                                    duration: $scope.partTime.duration * 8 || 0,
+                                    startDate : $scope.partTime.startDate,
+                                    endDate: $scope.partTime.endDate
+                                }
                             }
                         }).success(function(data, status, headers, config) {
                             $modalInstance.dismiss('cancel');
